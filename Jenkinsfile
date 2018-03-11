@@ -96,7 +96,7 @@ pipeline {
     }
     post {
         always {
-            powershell 'If (\$((docker ps -a --filter \"name=SQLLinux${BRANCH_NAME}\").Length) -eq 2) { docker rm -f SQLLinux${BRANCH_NAME} }'
+            powershell "If (\$((docker ps -a --filter \"name=SQLLinux${BRANCH_NAME}\").Length) -eq 2) { docker rm -f SQLLinux${BRANCH_NAME} }"
         }
         success {
             print 'post: Success'
