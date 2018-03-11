@@ -45,11 +45,11 @@ pipeline {
     stages {
         stage('git checkout') {     
             steps {
-                 getNextFreePort()
+                 print getNextFreePort()
                 
                 timeout(time: 5, unit: 'SECONDS') {
                     checkout scm
-                    print determineRepoName()
+                    print getVolumeName()
                 }
             }
         }
