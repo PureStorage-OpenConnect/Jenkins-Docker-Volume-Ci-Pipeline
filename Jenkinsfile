@@ -19,10 +19,10 @@ def DeployDacpac() {
     bat "\"${SqlPackage}\" /Action:Publish /SourceFile:\"${SourceFile}\" /TargetConnectionString:\"${ConnString}\" /p:ExcludeObjectType=Logins"
 }
 
-def getVolumeName() {
-    def repoName   = scm.getUserRemoteConfigs()[0].getUrl().tokenize('/').last().split("\\.")[0]
-    def volumeName = "${repoName}_${env.BRANCH_NAME}_${env.BUILD_NUMBER}"
-    return "${volumeName}"
+def getScmProjectName() {
+    def scmProjectName = scm.getUserRemoteConfigs()[0].getUrl().tokenize('/').last().split("\\.")[0]
+    //def volumeName = "${repoName}_${env.BRANCH_NAME}_${env.BUILD_NUMBER}"
+    return scmProjectName.trim()
 }
 
 pipeline {
@@ -30,6 +30,7 @@ pipeline {
     
     environment {
         PORT_NUMBER = getNextFreePort()
+        SCM_PROJECT =  getScmProjectName()
     }
     
     parameters {
@@ -39,12 +40,10 @@ pipeline {
     stages {
         stage('git checkout') {     
             steps {
-                 print getNextFreePort()
-                
                 timeout(time: 5, unit: 'SECONDS') {
                     checkout scm
-                    print getVolumeName()
                 }
+                print ${SCM_PROJECT}
             }
         }
         stage('build dacpac') {
