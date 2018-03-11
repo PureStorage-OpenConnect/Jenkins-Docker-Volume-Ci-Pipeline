@@ -13,7 +13,7 @@ def StartContainer() {
 
 def DeployDacpac() {
     def SqlPackage = "C:\\Program Files\\Microsoft SQL Server\\140\\DAC\\bin\\sqlpackage.exe"
-    def SourceFile = "Jenkins-Docker-Volume-Ci-Pipeline\\bin\\Release\\Jenkins-Docker-Volume-Ci-Pipeline.dacpac"
+    def SourceFile = "${SCM_PROJECT}\\bin\\Release\\${SCM_PROJECT}.dacpac"
     def ConnString = "server=localhost,${PORT_NUMBER};database=SsdtDevOpsDemo;user id=sa;password=P@ssword1"
     unstash 'theDacpac'
     bat "\"${SqlPackage}\" /Action:Publish /SourceFile:\"${SourceFile}\" /TargetConnectionString:\"${ConnString}\" /p:ExcludeObjectType=Logins"
@@ -43,13 +43,12 @@ pipeline {
                 timeout(time: 5, unit: 'SECONDS') {
                     checkout scm
                 }
-                print "${SCM_PROJECT}"
             }
         }
         stage('build dacpac') {
             steps {
                 bat "\"${tool name: 'Default', type: 'msbuild'}\" /p:Configuration=Release"
-                stash includes: 'Jenkins-Docker-Volume-Ci-Pipeline\\bin\\Release\\Jenkins-Docker-Volume-Ci-Pipeline.dacpac', name: 'theDacpac'
+                stash includes: '${SCM_PROJECT}\\bin\\Release\\${SCM_PROJECT}', name: 'theDacpac'
             }
         }
     
@@ -77,8 +76,8 @@ pipeline {
             }
             steps {
                 bat "sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -Q \"EXEC tSQLt.Run \'tSQLtHappyPath\'\""
-                bat "sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -y0 -Q \"SET NOCOUNT ON;EXEC tSQLt.XmlResultFormatter\" -o \"${WORKSPACE}\\Jenkins-Docker-Volume-Ci-Pipeline.xml\"" 
-                junit 'Jenkins-Docker-Volume-Ci-Pipeline.xml'
+                bat "sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -y0 -Q \"SET NOCOUNT ON;EXEC tSQLt.XmlResultFormatter\" -o \"${WORKSPACE}\\${SCM_PROJECT}.xml\"" 
+                junit '${SCM_PROJECT}.xml'
             }
         }
 
@@ -90,8 +89,8 @@ pipeline {
             }
             steps {
                 bat "sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -Q \"EXEC tSQLt.Run \'tSQLtUnhappyPath\'\""
-                bat "sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -y0 -Q \"SET NOCOUNT ON;EXEC tSQLt.XmlResultFormatter\" -o \"${WORKSPACE}\\Jenkins-Docker-Volume-Ci-Pipeline.xml\"" 
-                junit 'Jenkins-Docker-Volume-Ci-Pipeline.xml'
+                bat "sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -y0 -Q \"SET NOCOUNT ON;EXEC tSQLt.XmlResultFormatter\" -o \"${WORKSPACE}\\${SCM_PROJECT}.xml\"" 
+                junit '${SCM_PROJECT}.xml'
             }
         }
     }
