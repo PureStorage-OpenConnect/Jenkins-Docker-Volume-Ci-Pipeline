@@ -17,15 +17,15 @@ def getNextFreePort() {
 def StartContainer() {
     bat "docker run -e \"ACCEPT_EULA=Y\" -e \"SA_PASSWORD=P@ssword1\" --name SQLLinuxMaster -d -i -p ${PORT_NUMBER}:1433 microsoft/mssql-server-linux:2017-GA"    
     powershell 'While (\$((docker logs SQLLinuxMaster | select-string ready | select-string client).Length) -eq 0) { Start-Sleep -s 1 }'    
-    bat "sqlcmd -S localhost,15565 -U sa -P P@ssword1 -Q \"EXEC sp_configure 'show advanced option', '1';RECONFIGURE\""
-    bat "sqlcmd -S localhost,15565 -U sa -P P@ssword1 -Q \"EXEC sp_configure 'clr enabled', 1;RECONFIGURE\""
-    bat "sqlcmd -S localhost,15565 -U sa -P P@ssword1 -Q \"EXEC sp_configure 'clr strict security', 0;RECONFIGURE\""
+    bat "sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -Q \"EXEC sp_configure 'show advanced option', '1';RECONFIGURE\""
+    bat "sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -Q \"EXEC sp_configure 'clr enabled', 1;RECONFIGURE\""
+    bat "sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -Q \"EXEC sp_configure 'clr strict security', 0;RECONFIGURE\""
 }
 
 def DeployDacpac() {
     def SqlPackage = "C:\\Program Files\\Microsoft SQL Server\\140\\DAC\\bin\\sqlpackage.exe"
     def SourceFile = "Jenkins-Docker-Volume-Ci-Pipeline\\bin\\Release\\Jenkins-Docker-Volume-Ci-Pipeline.dacpac"
-    def ConnString = "server=localhost,15565;database=SsdtDevOpsDemo;user id=sa;password=P@ssword1"
+    def ConnString = "server=localhost,${PORT_NUMBER};database=SsdtDevOpsDemo;user id=sa;password=P@ssword1"
     unstash 'theDacpac'
     bat "\"${SqlPackage}\" /Action:Publish /SourceFile:\"${SourceFile}\" /TargetConnectionString:\"${ConnString}\" /p:ExcludeObjectType=Logins"
 }
@@ -88,8 +88,8 @@ pipeline {
                 }
             }
             steps {
-                bat "sqlcmd -S localhost,15565 -U sa -P P@ssword1 -d SsdtDevOpsDemo -Q \"EXEC tSQLt.Run \'tSQLtHappyPath\'\""
-                bat "sqlcmd -S localhost,15565 -U sa -P P@ssword1 -d SsdtDevOpsDemo -y0 -Q \"SET NOCOUNT ON;EXEC tSQLt.XmlResultFormatter\" -o \"${WORKSPACE}\\Jenkins-Docker-Volume-Ci-Pipeline.xml\"" 
+                bat "sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -Q \"EXEC tSQLt.Run \'tSQLtHappyPath\'\""
+                bat "sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -y0 -Q \"SET NOCOUNT ON;EXEC tSQLt.XmlResultFormatter\" -o \"${WORKSPACE}\\Jenkins-Docker-Volume-Ci-Pipeline.xml\"" 
                 junit 'Jenkins-Docker-Volume-Ci-Pipeline.xml'
             }
         }
@@ -101,8 +101,8 @@ pipeline {
                 }
             }
             steps {
-                bat "sqlcmd -S localhost,15565 -U sa -P P@ssword1 -d SsdtDevOpsDemo -Q \"EXEC tSQLt.Run \'tSQLtUnhappyPath\'\""
-                bat "sqlcmd -S localhost,15565 -U sa -P P@ssword1 -d SsdtDevOpsDemo -y0 -Q \"SET NOCOUNT ON;EXEC tSQLt.XmlResultFormatter\" -o \"${WORKSPACE}\\Jenkins-Docker-Volume-Ci-Pipeline.xml\"" 
+                bat "sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -Q \"EXEC tSQLt.Run \'tSQLtUnhappyPath\'\""
+                bat "sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -y0 -Q \"SET NOCOUNT ON;EXEC tSQLt.XmlResultFormatter\" -o \"${WORKSPACE}\\Jenkins-Docker-Volume-Ci-Pipeline.xml\"" 
                 junit 'Jenkins-Docker-Volume-Ci-Pipeline.xml'
             }
         }
