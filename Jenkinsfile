@@ -15,7 +15,7 @@ def getNextFreePort() {
 }
 
 def StartContainer() {
-    bat "docker run -e \"ACCEPT_EULA=Y\" -e \"SA_PASSWORD=P@ssword1\" --name SQLLinuxMaster -d -i -p ${getNextFreePort()}:1433 microsoft/mssql-server-linux:2017-GA"    
+    bat "docker run -e \"ACCEPT_EULA=Y\" -e \"SA_PASSWORD=P@ssword1\" --name SQLLinuxMaster -d -i -p ${PORT_NUMBER}:1433 microsoft/mssql-server-linux:2017-GA"    
     powershell 'While (\$((docker logs SQLLinuxMaster | select-string ready | select-string client).Length) -eq 0) { Start-Sleep -s 1 }'    
     bat "sqlcmd -S localhost,15565 -U sa -P P@ssword1 -Q \"EXEC sp_configure 'show advanced option', '1';RECONFIGURE\""
     bat "sqlcmd -S localhost,15565 -U sa -P P@ssword1 -Q \"EXEC sp_configure 'clr enabled', 1;RECONFIGURE\""
@@ -38,6 +38,10 @@ def getVolumeName() {
 
 pipeline {
     agent any
+    
+    environment {
+        PORT_NUMBER = getNextFreePort()
+    }
     
     parameters {
         booleanParam(defaultValue: true, description: '', name: 'HAPPY_PATH')
