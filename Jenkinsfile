@@ -43,7 +43,7 @@ pipeline {
                 timeout(time: 5, unit: 'SECONDS') {
                     checkout scm
                 }
-                print ${SCM_PROJECT}
+                print "${SCM_PROJECT}"
             }
         }
         stage('build dacpac') {
