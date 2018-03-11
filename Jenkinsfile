@@ -30,7 +30,7 @@ pipeline {
     
     environment {
         PORT_NUMBER = getNextFreePort()
-        SCM_PROJECT =  getScmProjectName()
+        SCM_PROJECT = getScmProjectName()
     }
     
     parameters {
