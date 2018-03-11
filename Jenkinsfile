@@ -1,4 +1,4 @@
-def getNextFreePort() {
+def GetNextFreePort() {
     def port = powershell(returnStdout: true, script: '((Get-NetTCPConnection | Sort-Object -Property LocalPort | Select-Object -Last 1).LocalPort) + 1')
     return port.trim()
 }
@@ -11,6 +11,10 @@ def StartContainer() {
     bat "sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -Q \"EXEC sp_configure 'clr strict security', 0;RECONFIGURE\""
 }
 
+def RemoveContainer() {
+    powershell "If (\$((docker ps -a --filter \"name=SQLLinux${BRANCH_NAME}\").Length) -eq 2) { docker rm -f SQLLinux${BRANCH_NAME} }"
+}
+
 def DeployDacpac() {
     def SqlPackage = "C:\\Program Files\\Microsoft SQL Server\\140\\DAC\\bin\\sqlpackage.exe"
     def SourceFile = "${SCM_PROJECT}\\bin\\Release\\${SCM_PROJECT}.dacpac"
@@ -19,7 +23,7 @@ def DeployDacpac() {
     bat "\"${SqlPackage}\" /Action:Publish /SourceFile:\"${SourceFile}\" /TargetConnectionString:\"${ConnString}\" /p:ExcludeObjectType=Logins"
 }
 
-def getScmProjectName() {
+def GetScmProjectName() {
     def scmProjectName = scm.getUserRemoteConfigs()[0].getUrl().tokenize('/').last().split("\\.")[0]
     //def volumeName = "${repoName}_${env.BRANCH_NAME}_${env.BUILD_NUMBER}"
     return scmProjectName.trim()
@@ -29,8 +33,8 @@ pipeline {
     agent any
     
     environment {
-        PORT_NUMBER = getNextFreePort()
-        SCM_PROJECT = getScmProjectName()
+        PORT_NUMBER = GetNextFreePort()
+        SCM_PROJECT = GetScmProjectName()
     }
     
     parameters {
@@ -54,6 +58,7 @@ pipeline {
     
         stage('start container') {
             steps {
+                RemoveContainer()
                 timeout(time: 20, unit: 'SECONDS') {
                     StartContainer()
                 }
@@ -96,7 +101,7 @@ pipeline {
     }
     post {
         always {
-            powershell "If (\$((docker ps -a --filter \"name=SQLLinux${BRANCH_NAME}\").Length) -eq 2) { docker rm -f SQLLinux${BRANCH_NAME} }"
+            RemoveContainer()
         }
         success {
             print 'post: Success'
