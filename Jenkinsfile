@@ -25,10 +25,14 @@ def DeployDacpac() {
     bat "\"${SqlPackage}\" /Action:Publish /SourceFile:\"${SourceFile}\" /TargetConnectionString:\"${ConnString}\" /p:ExcludeObjectType=Logins"
 }
 
-def determineRepoName() {
+def getVolumeName() {
     def repoName   = scm.getUserRemoteConfigs()[0].getUrl().tokenize('/').last().split("\\.")[0]
     def volumeName = "${repoName}_${env.BRANCH_NAME}_${env.BUILD_NUMBER}"
     return "${volumeName}"
+}
+
+def getNextFreePort() {
+    return powershell(returnStdout: true, script: '((Get-NetTCPConnection | Sort-Object -Property LocalPort | Select-Object -Last 1).LocalPort) + 1')
 }
 
 pipeline {
@@ -41,6 +45,8 @@ pipeline {
     stages {
         stage('git checkout') {     
             steps {
+                 getNextFreePort()
+                
                 timeout(time: 5, unit: 'SECONDS') {
                     checkout scm
                     print determineRepoName()
