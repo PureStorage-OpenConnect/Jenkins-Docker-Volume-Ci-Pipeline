@@ -71,7 +71,7 @@ pipeline {
             }
         }
         
-        stage('run tests') {
+        stage('run tests (Happy path)') {
             when {
                 expression {
                     return params.HAPPY_PATH
@@ -79,6 +79,19 @@ pipeline {
             }
             steps {
                 bat "sqlcmd -S localhost,15565 -U sa -P P@ssword1 -d SsdtDevOpsDemo -Q \"EXEC tSQLt.Run \'tSQLtHappyPath\'\""
+                bat "sqlcmd -S localhost,15565 -U sa -P P@ssword1 -d SsdtDevOpsDemo -y0 -Q \"SET NOCOUNT ON;EXEC tSQLt.XmlResultFormatter\" -o \"${WORKSPACE}\\Jenkins-Docker-Volume-Ci-Pipeline.xml\"" 
+                junit 'Jenkins-Docker-Volume-Ci-Pipeline.xml'
+            }
+        }
+
+        stage('run tests (Un-happy path)') {
+            when {
+                expression {
+                    return !(params.HAPPY_PATH)
+                }
+            }
+            steps {
+                bat "sqlcmd -S localhost,15565 -U sa -P P@ssword1 -d SsdtDevOpsDemo -Q \"EXEC tSQLt.Run \'tSQLtUnhappyPath\'\""
                 bat "sqlcmd -S localhost,15565 -U sa -P P@ssword1 -d SsdtDevOpsDemo -y0 -Q \"SET NOCOUNT ON;EXEC tSQLt.XmlResultFormatter\" -o \"${WORKSPACE}\\Jenkins-Docker-Volume-Ci-Pipeline.xml\"" 
                 junit 'Jenkins-Docker-Volume-Ci-Pipeline.xml'
             }
