@@ -10,7 +10,6 @@ def BranchToPort(String branchName) {
 }
 
 def StartContainer() {
-    powershell 'If (\$((docker ps -a --filter \"name=SQLLinuxMaster\").Length) -eq 2) { docker rm -f SQLLinuxMaster }'
     bat "docker run -e \"ACCEPT_EULA=Y\" -e \"SA_PASSWORD=P@ssword1\" --name SQLLinuxMaster -d -i -p 15565:1433 microsoft/mssql-server-linux:2017-GA"    
     powershell 'While (\$((docker logs SQLLinuxMaster | select-string ready | select-string client).Length) -eq 0) { Start-Sleep -s 1 }'    
     bat "sqlcmd -S localhost,15565 -U sa -P P@ssword1 -Q \"EXEC sp_configure 'show advanced option', '1';RECONFIGURE\""
@@ -98,6 +97,9 @@ pipeline {
         }
     }
     post {
+        always {
+            powershell 'If (\$((docker ps -a --filter \"name=SQLLinuxMaster\").Length) -eq 2) { docker rm -f SQLLinuxMaster }'
+        }
         success {
             print 'post: Success'
         }
