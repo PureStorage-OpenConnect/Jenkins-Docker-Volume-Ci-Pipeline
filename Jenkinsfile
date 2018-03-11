@@ -52,47 +52,47 @@ pipeline {
             }
         }
     
-        stage('start container') {
-            steps {
-                timeout(time: 20, unit: 'SECONDS') {
-                    StartContainer()
-                }
-            }
-        }
+        //stage('start container') {
+        //    steps {
+        //        timeout(time: 20, unit: 'SECONDS') {
+        //            StartContainer()
+        //        }
+        //    }
+        //}
     
-        stage('deploy dacpac') {
-            steps {
-                timeout(time: 60, unit: 'SECONDS') {
-                   DeployDacpac()
-                }
-            }
-        }
+        //stage('deploy dacpac') {
+        //    steps {
+        //        timeout(time: 60, unit: 'SECONDS') {
+        //           DeployDacpac()
+        //        }
+        //    }
+        //}
         
-        stage('run tests (Happy path)') {
-            when {
-                expression {
-                    return params.HAPPY_PATH
-                }
-            }
-            steps {
-                bat "sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -Q \"EXEC tSQLt.Run \'tSQLtHappyPath\'\""
-                bat "sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -y0 -Q \"SET NOCOUNT ON;EXEC tSQLt.XmlResultFormatter\" -o \"${WORKSPACE}\\${SCM_PROJECT}.xml\"" 
-                junit '${SCM_PROJECT}.xml'
-            }
-        }
+        //stage('run tests (Happy path)') {
+        //    when {
+        //        expression {
+        //            return params.HAPPY_PATH
+        //        }
+        //    }
+        //    steps {
+        //        bat "sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -Q \"EXEC tSQLt.Run \'tSQLtHappyPath\'\""
+        //        bat "sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -y0 -Q \"SET NOCOUNT ON;EXEC tSQLt.XmlResultFormatter\" -o \"${WORKSPACE}\\${SCM_PROJECT}.xml\"" 
+        //        junit '${SCM_PROJECT}.xml'
+        //    }
+        //}
 
-        stage('run tests (Un-happy path)') {
-            when {
-                expression {
-                    return !(params.HAPPY_PATH)
-                }
-            }
-            steps {
-                bat "sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -Q \"EXEC tSQLt.Run \'tSQLtUnhappyPath\'\""
-                bat "sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -y0 -Q \"SET NOCOUNT ON;EXEC tSQLt.XmlResultFormatter\" -o \"${WORKSPACE}\\${SCM_PROJECT}.xml\"" 
-                junit '${SCM_PROJECT}.xml'
-            }
-        }
+        //stage('run tests (Un-happy path)') {
+        //    when {
+        //        expression {
+        //            return !(params.HAPPY_PATH)
+        //        }
+        //    }
+        //    steps {
+        //        bat "sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -Q \"EXEC tSQLt.Run \'tSQLtUnhappyPath\'\""
+        //        bat "sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -y0 -Q \"SET NOCOUNT ON;EXEC tSQLt.XmlResultFormatter\" -o \"${WORKSPACE}\\${SCM_PROJECT}.xml\"" 
+        //        junit '${SCM_PROJECT}.xml'
+        //    }
+        //}
     }
     post {
         always {
