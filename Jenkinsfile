@@ -4,8 +4,8 @@ def GetNextFreePort() {
     return port.trim()
 }
 
-def StartContainer() {
-    sh "docker rm -f SQLLinux${BRANCH_NAME} 2> /dev/null"    
+def StartContainer() {    
+    sh "docker ps -q --filter \"name=${CONTAINER_NAME}\" | grep -q . \&\& docker rm -f ${CONTAINER_NAME}"
     sh "docker run -v ${VOLUME_NAME}:/var/opt/mssql -e \"ACCEPT_EULA=Y\" -e \"SA_PASSWORD=P@ssword1\" --name ${CONTAINER_NAME} -d -i -p ${PORT_NUMBER}:1433 microsoft/mssql-server-linux:2017-GA && sleep 10"    
     sh "/opt/mssql-tools/bin/sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -Q \"EXEC sp_configure 'show advanced option', '1';RECONFIGURE\""
     sh "/opt/mssql-tools/bin/sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -Q \"EXEC sp_configure 'clr enabled', 1;RECONFIGURE\""
@@ -15,7 +15,7 @@ def StartContainer() {
 def DeployDacpac() {
     def SqlPackage = "C:\\Program Files (x86)\\Microsoft SQL Server\\140\\DAC\\bin\\sqlpackage.exe"
     def SourceFile = "${SCM_PROJECT}\\bin\\Release\\${SCM_PROJECT}.dacpac"
-    def ConnString = "server=${LINUX_AGENT_IP_ADDRESS},${PORT_NUMBER};database=SsdtDevOpsDemo;user id=sa;password=P@ssword1"
+    def ConnString = "server=${CONTAINER_HOST_IP_ADDR},${PORT_NUMBER};database=SsdtDevOpsDemo;user id=sa;password=P@ssword1"
     unstash 'theDacpac'
     bat "\"${SqlPackage}\" /Action:Publish /SourceFile:\"${SourceFile}\" /TargetConnectionString:\"${ConnString}\" /p:ExcludeObjectType=Logins"
 }
@@ -33,12 +33,11 @@ pipeline {
         SCM_PROJECT            = GetScmProjectName()
         CONTAINER_NAME         = "SQLLinux${env.BRANCH_NAME}"
         VOLUME_NAME            = "${SCM_PROJECT}_${env.BRANCH_NAME}_${env.BUILD_NUMBER}"
-        LINUX_AGENT_IP_ADDRESS = "10.223.112.98"
     }
 
     parameters {
-        booleanParam(defaultValue: true, description: '', name: 'HAPPY_PATH')
-        string(defaultValue : 'X', description: '', name: 'HPATH')
+        booleanParam(defaultValue: true           , description: '', name: 'HAPPY_PATH')
+              string(defaultValue: '10.223.112.98', description: '', name: 'CONTAINER_HOST_IP_ADDR')
     }
     
     stages {
@@ -82,8 +81,8 @@ pipeline {
                 }
             }
             steps {
-                bat "sqlcmd -S ${LINUX_AGENT_IP_ADDRESS},${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -Q \"EXEC tSQLt.Run \'tSQLtHappyPath\'\""
-                bat "sqlcmd -S ${LINUX_AGENT_IP_ADDRESS},${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -y0 -Q \"SET NOCOUNT ON;EXEC tSQLt.XmlResultFormatter\" -o \"${WORKSPACE}\\${SCM_PROJECT}.xml\"" 
+                bat "sqlcmd -S ${CONTAINER_HOST_IP_ADDR},${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -Q \"EXEC tSQLt.Run \'tSQLtHappyPath\'\""
+                bat "sqlcmd -S ${CONTAINER_HOST_IP_ADDR},${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -y0 -Q \"SET NOCOUNT ON;EXEC tSQLt.XmlResultFormatter\" -o \"${WORKSPACE}\\${SCM_PROJECT}.xml\"" 
                 junit "${SCM_PROJECT}.xml"
             }
         }
@@ -95,8 +94,8 @@ pipeline {
                 }
             }
             steps {
-                bat "sqlcmd -S ${LINUX_AGENT_IP_ADDRESS},${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -Q \"EXEC tSQLt.Run \'tSQLtUnhappyPath\'\""
-                bat "sqlcmd -S ${LINUX_AGENT_IP_ADDRESS},${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -y0 -Q \"SET NOCOUNT ON;EXEC tSQLt.XmlResultFormatter\" -o \"${WORKSPACE}\\${SCM_PROJECT}.xml\"" 
+                bat "sqlcmd -S ${CONTAINER_HOST_IP_ADDR},${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -Q \"EXEC tSQLt.Run \'tSQLtUnhappyPath\'\""
+                bat "sqlcmd -S ${CONTAINER_HOST_IP_ADDR},${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -y0 -Q \"SET NOCOUNT ON;EXEC tSQLt.XmlResultFormatter\" -o \"${WORKSPACE}\\${SCM_PROJECT}.xml\"" 
                 junit "${SCM_PROJECT}.xml"
             }
         }        
