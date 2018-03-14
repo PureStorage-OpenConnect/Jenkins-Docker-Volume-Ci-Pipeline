@@ -93,8 +93,8 @@ pipeline {
                 }
             }
             steps {
-                bat "sqlcmd -S {LINUX_AGENT_IP_ADDRESS},${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -Q \"EXEC tSQLt.Run \'tSQLtUnhappyPath\'\""
-                bat "sqlcmd -S {LINUX_AGENT_IP_ADDRESS},${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -y0 -Q \"SET NOCOUNT ON;EXEC tSQLt.XmlResultFormatter\" -o \"${WORKSPACE}\\${SCM_PROJECT}.xml\"" 
+                bat "sqlcmd -S ${LINUX_AGENT_IP_ADDRESS},${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -Q \"EXEC tSQLt.Run \'tSQLtUnhappyPath\'\""
+                bat "sqlcmd -S ${LINUX_AGENT_IP_ADDRESS},${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -y0 -Q \"SET NOCOUNT ON;EXEC tSQLt.XmlResultFormatter\" -o \"${WORKSPACE}\\${SCM_PROJECT}.xml\"" 
                 junit "${SCM_PROJECT}.xml"
             }
         }
