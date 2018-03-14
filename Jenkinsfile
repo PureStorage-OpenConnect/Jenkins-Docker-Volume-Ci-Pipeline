@@ -59,7 +59,6 @@ pipeline {
                 label "linux-agent"
             }
             steps {
-                RemoveContainer()
                 timeout(time: 20, unit: 'SECONDS') {
                     StartContainer()
                 }
