@@ -102,6 +102,9 @@ pipeline {
     post {
         always {                  
             print 'post: Always'
+            node ('linux-agent') {
+                sh "docker volume rm -f ${VOLUME_NAME}"
+            }
         }
         success {
             //
@@ -111,10 +114,10 @@ pipeline {
             print 'post: Success'
         }
         unstable {
+            print 'post: Unstable'
             node ('linux-agent') {
                 sh "docker volume rm -f ${VOLUME_NAME}"
             }
-            print 'post: Unstable'
         }
         failure {
             print 'post: Failure'
