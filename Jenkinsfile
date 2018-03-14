@@ -106,10 +106,11 @@ pipeline {
     }
     post {
         always {            
-            agent {
-                label "linux-agent"
-            }
-            RemoveContainer()
+        //    agent {
+        //        label "linux-agent"
+        //    }
+        //    RemoveContainer()
+            print 'post: Always'
         }
         success {
             //
