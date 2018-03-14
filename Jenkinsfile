@@ -97,7 +97,7 @@ pipeline {
                 bat "sqlcmd -S ${LINUX_AGENT_IP_ADDRESS},${PORT_NUMBER} -U sa -P P@ssword1 -d SsdtDevOpsDemo -y0 -Q \"SET NOCOUNT ON;EXEC tSQLt.XmlResultFormatter\" -o \"${WORKSPACE}\\${SCM_PROJECT}.xml\"" 
                 junit "${SCM_PROJECT}.xml"
             }
-        }
+        }        
     }
     post {
         always {                  
@@ -111,9 +111,11 @@ pipeline {
             print 'post: Success'
         }
         unstable {
-            //
-            // tSQLt tests have failed, therefore we want to remove the volume
-            //
+            node ('linux-agent') {
+                step {
+                    sh "docker volume rm -f ${VOLUME_NAME}"
+                }
+            }
             print 'post: Unstable'
         }
         failure {
