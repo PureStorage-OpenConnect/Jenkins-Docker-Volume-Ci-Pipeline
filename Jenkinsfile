@@ -15,7 +15,7 @@ def StartContainer() {
 def DeployDacpac() {
     def SqlPackage = "C:\\Program Files\\Microsoft SQL Server\\140\\DAC\\bin\\sqlpackage.exe"
     def SourceFile = "${SCM_PROJECT}\\bin\\Release\\${SCM_PROJECT}.dacpac"
-    def ConnString = "server=localhost,${PORT_NUMBER};database=SsdtDevOpsDemo;user id=sa;password=P@ssword1"
+    def ConnString = "server=${LINUX_AGENT_IP_ADDRESS},${PORT_NUMBER};database=SsdtDevOpsDemo;user id=sa;password=P@ssword1"
     unstash 'theDacpac'
     bat "\"${SqlPackage}\" /Action:Publish /SourceFile:\"${SourceFile}\" /TargetConnectionString:\"${ConnString}\" /p:ExcludeObjectType=Logins"
 }
