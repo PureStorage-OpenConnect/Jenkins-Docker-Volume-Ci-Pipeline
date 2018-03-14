@@ -5,14 +5,11 @@ def GetNextFreePort() {
 }
 
 def StartContainer() {
+    sh "docker rm -f --name SQLLinux${BRANCH_NAME} 2> /dev/null"    
     sh "docker run -v ${VOLUME_NAME}:/var/opt/mssql -e \"ACCEPT_EULA=Y\" -e \"SA_PASSWORD=P@ssword1\" --name SQLLinux${BRANCH_NAME} -d -i -p ${PORT_NUMBER}:1433 microsoft/mssql-server-linux:2017-GA && sleep 10"    
     sh "/opt/mssql-tools/bin/sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -Q \"EXEC sp_configure 'show advanced option', '1';RECONFIGURE\""
     sh "/opt/mssql-tools/bin/sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -Q \"EXEC sp_configure 'clr enabled', 1;RECONFIGURE\""
     sh "/opt/mssql-tools/bin/sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -Q \"EXEC sp_configure 'clr strict security', 0;RECONFIGURE\""
-}
-
-def RemoveContainer() {
-    powershell "If (\$((docker ps -a --filter \"name=SQLLinux${BRANCH_NAME}\").Length) -eq 2) { docker rm -f SQLLinux${BRANCH_NAME} }"
 }
 
 def DeployDacpac() {
@@ -69,13 +66,13 @@ pipeline {
             }
         }
     
-        //stage('deploy dacpac') {
-        //    steps {
-        //        timeout(time: 60, unit: 'SECONDS') {
-        //           DeployDacpac()
-        //        }
-        //    }
-        //}
+        stage('deploy dacpac') {
+            steps {
+                timeout(time: 60, unit: 'SECONDS') {
+                   DeployDacpac()
+                }
+            }
+        }
         
         //stage('run tests (Happy path)') {
         //    when {
