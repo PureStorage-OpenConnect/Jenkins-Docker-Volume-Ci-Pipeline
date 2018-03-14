@@ -38,7 +38,8 @@ pipeline {
     }
     
     parameters {
-        booleanParam(defaultValue: true, description: '', name: 'HAPPY_PATH')
+        booleanParam(defaultValue: true         , description: '', name: 'HAPPY_PATH')
+        booleanParam(defaultValue: 10.223.112.98, description: '', name: 'LINUX_AGENT_IP_ADDRESS')       
     }
     
     stages {
@@ -57,6 +58,9 @@ pipeline {
         }
     
         stage('start container') {
+            agent {
+                label "linux-agent"
+            }
             steps {
                 RemoveContainer()
                 timeout(time: 20, unit: 'SECONDS') {
@@ -100,13 +104,27 @@ pipeline {
         }
     }
     post {
-        always {
+        always {            
+            agent {
+                label "linux-agent"
+            }
             RemoveContainer()
         }
         success {
+            //
+            // tSQLt tests have passed, therefore take no action which should mean
+            // that the Docker volume is available for future use
+            //
             print 'post: Success'
         }
         unstable {
+            agent {
+                label "linux-agent"
+            }
+            //
+            // tSQLt tests have failed, therefore we want to remove the volume
+            //
+            bat "docker rm -f ${VOLUME_NAME}"
             print 'post: Unstable'
         }
         failure {
