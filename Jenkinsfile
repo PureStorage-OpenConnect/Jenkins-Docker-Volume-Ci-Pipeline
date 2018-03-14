@@ -36,10 +36,10 @@ pipeline {
         SCM_PROJECT = GetScmProjectName()
         VOLUME_NAME = "${SCM_PROJECT}_${env.BRANCH_NAME}_${env.BUILD_NUMBER}"
     }
-    
+
     parameters {
-        booleanParam(defaultValue: true         , description: '', name: 'HAPPY_PATH')
-        booleanParam(defaultValue: 10.223.112.98, description: '', name: 'LINUX_AGENT_IP_ADDRESS')       
+        booleanParameter(defaultValue: true           , description: '', name: 'HAPPY_PATH'),
+        stringParameter(defaultValue : '10.223.112.98', description: '', name: 'LINUX_AGENT_IP_ADDRESS')       
     }
     
     stages {
