@@ -38,6 +38,7 @@ pipeline {
 
     parameters {
         booleanParam(defaultValue: true, description: '', name: 'HAPPY_PATH')
+        stringParam(defaultValue : 'X', description: '', name: 'HPATH')
     }
     
     stages {
