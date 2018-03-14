@@ -114,7 +114,6 @@ pipeline {
             //
             // tSQLt tests have failed, therefore we want to remove the volume
             //
-            bat "docker rm -f ${VOLUME_NAME}"
             print 'post: Unstable'
         }
         failure {
