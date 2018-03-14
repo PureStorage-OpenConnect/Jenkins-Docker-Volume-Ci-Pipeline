@@ -4,7 +4,7 @@ def GetNextFreePort() {
 }
 
 def StartContainer() {
-    bat "docker run -e \"ACCEPT_EULA=Y\" -e \"SA_PASSWORD=P@ssword1\" --name SQLLinux${BRANCH_NAME} -d -i -p ${PORT_NUMBER}:1433 microsoft/mssql-server-linux:2017-GA"    
+    bat "docker run -v ${VOLUME_NAME}:/var/opt/mssql -e \"ACCEPT_EULA=Y\" -e \"SA_PASSWORD=P@ssword1\" --name SQLLinux${BRANCH_NAME} -d -i -p ${PORT_NUMBER}:1433 microsoft/mssql-server-linux:2017-GA"    
     powershell "While (\$((docker logs SQLLinux${BRANCH_NAME} | select-string ready | select-string client).Length) -eq 0) { Start-Sleep -s 1 }"    
     bat "sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -Q \"EXEC sp_configure 'show advanced option', '1';RECONFIGURE\""
     bat "sqlcmd -S localhost,${PORT_NUMBER} -U sa -P P@ssword1 -Q \"EXEC sp_configure 'clr enabled', 1;RECONFIGURE\""
@@ -25,7 +25,6 @@ def DeployDacpac() {
 
 def GetScmProjectName() {
     def scmProjectName = scm.getUserRemoteConfigs()[0].getUrl().tokenize('/').last().split("\\.")[0]
-    //def volumeName = "${repoName}_${env.BRANCH_NAME}_${env.BUILD_NUMBER}"
     return scmProjectName.trim()
 }
 
@@ -35,6 +34,7 @@ pipeline {
     environment {
         PORT_NUMBER = GetNextFreePort()
         SCM_PROJECT = GetScmProjectName()
+        VOLUME_NAME = "${SCM_PROJECT}_${env.BRANCH_NAME}_${env.BUILD_NUMBER}"
     }
     
     parameters {
