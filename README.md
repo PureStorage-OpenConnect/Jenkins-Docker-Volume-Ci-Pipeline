@@ -9,3 +9,4 @@ This repository contains a SQL Server data tools project and a Jenkinsfile writt
 - Performs tSQLt unit tests **in serial**
 - Renders the tSQLt unit test results to Jenkins using the JUnit plugin
 - Tears down the container
+- Removes the Docker volume if any of the tSQLt tests have failed
