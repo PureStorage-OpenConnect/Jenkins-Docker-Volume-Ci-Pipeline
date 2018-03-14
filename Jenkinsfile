@@ -1,5 +1,5 @@
 def GetNextFreePort() {
-    def port = sh(returnStdout: true, script: '#!/bin/bash\\n port=\$(netstat -tunlep | fgrep \"0.0.0.0\" | awk \'{ split (\$4, a, \":\"); print a[2] }\' | sort -nr | head -1);expr \$port + 1')
+    def port = sh(returnStdout: true, script: '/var/opt/jenkins/get_port.sh')
     return port.trim()
 }
 
