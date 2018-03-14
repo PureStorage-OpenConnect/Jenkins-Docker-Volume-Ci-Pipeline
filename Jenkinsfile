@@ -58,17 +58,17 @@ pipeline {
             }
         }
     
-        //stage('start container') {
-        //    agent {
-        //        label "linux-agent"
-        //    }
-        //    steps {
-        //        RemoveContainer()
-        //        timeout(time: 20, unit: 'SECONDS') {
-        //            StartContainer()
-        //        }
-        //    }
-        //}
+        stage('start container') {
+            agent {
+                label "linux-agent"
+            }
+            steps {
+                RemoveContainer()
+                timeout(time: 20, unit: 'SECONDS') {
+                    StartContainer()
+                }
+            }
+        }
     
         //stage('deploy dacpac') {
         //    steps {
