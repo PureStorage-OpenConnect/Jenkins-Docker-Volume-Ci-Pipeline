@@ -38,7 +38,7 @@ pipeline {
     }
 
     parameters {
-        booleanParameter(defaultValue: true           , description: '', name: 'HAPPY_PATH'),
+        booleanParameter(defaultValue: true           , description: '', name: 'HAPPY_PATH')
         stringParameter(defaultValue : '10.223.112.98', description: '', name: 'LINUX_AGENT_IP_ADDRESS')       
     }
     
