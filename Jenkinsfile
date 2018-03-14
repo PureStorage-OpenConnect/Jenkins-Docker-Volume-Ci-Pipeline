@@ -112,9 +112,7 @@ pipeline {
         }
         unstable {
             node ('linux-agent') {
-                step {
-                    sh "docker volume rm -f ${VOLUME_NAME}"
-                }
+                sh "docker volume rm -f ${VOLUME_NAME}"
             }
             print 'post: Unstable'
         }
