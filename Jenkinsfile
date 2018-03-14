@@ -1,5 +1,6 @@
 def GetNextFreePort() {
-    def port = sh(returnStdout: true, script: '/var/opt/jenkins/get_port.sh')
+    //def port = sh(returnStdout: true, script: '/var/opt/jenkins/get_port.sh')
+    def port = "8081"
     return port.trim()
 }
 
