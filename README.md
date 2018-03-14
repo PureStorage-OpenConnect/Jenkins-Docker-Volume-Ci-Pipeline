@@ -3,7 +3,7 @@ This repository contains a SQL Server data tools project and a Jenkinsfile writt
 - Checks the project out from SCM
 - Spins up a container to deploy the DacPac to **in serial**, the container:
   - is named **[SQLLinux|branch name]**
-  - is assigned a Docker volumes named **[SCM project name|branch name|build number]**
+  - is assigned a Docker volume named **[SCM project name|branch name|build number]**
   - has a unqiue external port so as to avoid port clashes
 - Deploys the DacPac to the container
 - Performs tSQLt unit tests **in serial**
