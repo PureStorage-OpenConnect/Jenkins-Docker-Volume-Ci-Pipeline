@@ -1,5 +1,5 @@
 def GetNextFreePort() {
-    def port = sh(returnStdout: true, script: 'ruby -e \'require \"socket\"; puts Addrinfo.tcp(\"\", 0).bind {|s| s.local_address.ip_port }\'')
+    def port = sh(returnStdout: true, script: 'ruby -e 'require \"socket\"; puts Addrinfo.tcp(\"\", 0).bind {|s| s.local_address.ip_port }'')
     return port.trim()
 }
 
