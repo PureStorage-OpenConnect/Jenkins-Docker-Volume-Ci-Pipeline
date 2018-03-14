@@ -39,7 +39,7 @@ pipeline {
     }
 
     parameters {
-        booleanParameter(defaultValue: true           , description: '', name: 'HAPPY_PATH')
+        booleanParam(defaultValue: true, description: '', name: 'HAPPY_PATH')
     }
     
     stages {
