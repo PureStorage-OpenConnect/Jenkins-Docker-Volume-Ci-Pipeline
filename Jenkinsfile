@@ -1,5 +1,5 @@
 def GetNextFreePort() {
-    def port = powershell(returnStdout: true, script: '((Get-NetTCPConnection | Sort-Object -Property LocalPort | Select-Object -Last 1).LocalPort) + 1')
+    def port = sh(returnStdout: true, script: 'port=\$(netstat -tunlep | fgrep \"0.0.0.0\" | awk \'{ split (\$4, a, \":\"); print a[2] }\' | sort -nr | head -1);expr \$port + 1')
     return port.trim()
 }
 
