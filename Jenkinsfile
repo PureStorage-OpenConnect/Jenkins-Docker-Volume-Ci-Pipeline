@@ -119,9 +119,9 @@ pipeline {
             print 'post: Success'
         }
         unstable {
-            agent {
-                label "linux-agent"
-            }
+            //agent {
+            //    label "linux-agent"
+            //}
             //
             // tSQLt tests have failed, therefore we want to remove the volume
             //
