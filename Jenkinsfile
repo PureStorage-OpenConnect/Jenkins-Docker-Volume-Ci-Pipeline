@@ -32,14 +32,14 @@ pipeline {
     agent any
     
     environment {
-        PORT_NUMBER = GetNextFreePort()
-        SCM_PROJECT = GetScmProjectName()
-        VOLUME_NAME = "${SCM_PROJECT}_${env.BRANCH_NAME}_${env.BUILD_NUMBER}"
+        PORT_NUMBER            = GetNextFreePort()
+        SCM_PROJECT            = GetScmProjectName()
+        VOLUME_NAME            = "${SCM_PROJECT}_${env.BRANCH_NAME}_${env.BUILD_NUMBER}"
+        LINUX_AGENT_IP_ADDRESS = "10.223.112.98"
     }
 
     parameters {
         booleanParameter(defaultValue: true           , description: '', name: 'HAPPY_PATH')
-        stringParameter(defaultValue : '10.223.112.98', description: '', name: 'LINUX_AGENT_IP_ADDRESS')       
     }
     
     stages {
