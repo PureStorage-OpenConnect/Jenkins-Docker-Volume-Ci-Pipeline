@@ -33,7 +33,7 @@ To use this sample pipeline the following pre-requisites must be met:
   
 3. SQL Server client tools (minimum version 2016)
 
-## Linux node - build slave
+## Linux node Build slave
 
 1. A server with one of the following distributions of Linux installed:
  - CentOS Linux 7.3
