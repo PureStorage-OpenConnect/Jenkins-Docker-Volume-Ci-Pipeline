@@ -22,40 +22,40 @@ To use this sample pipeline the following pre-requisites must be met:
 
 ## Jenkins Windows Build master
 
-- Jenkins 2.0 installed along with the git, msbuild and pipeline plugins, refer to the following link:
+1. Jenkins 2.0 installed along with the git, msbuild and pipeline plugins, refer to the following link:
   
-  https://jenkins.io/download/
+   https://jenkins.io/download/
   
-  this can either be a virtual or physical machine.   
+   this can either be a virtual or physical machine.   
 
-- DACFX installed on the windows server, refer to the following link:
-  https://www.microsoft.com/en-us/download/details.aspx?id=55114
+2. DACFX installed on the windows server, refer to the following link:
+   https://www.microsoft.com/en-us/download/details.aspx?id=55114
   
-- SQL Server client tools (minimum version 2016)
+3. SQL Server client tools (minimum version 2016)
 
 ## Linux node - build slave
 
-- A server with one of the following distributions of Linux installed:
+1. A server with one of the following distributions of Linux installed:
  - CentOS Linux 7.3
  - CoreOS (Ladybug 1298.6.0 and above)
  - RedHat RHEL7
  - Ubuntu (Trusty 14.04 LTS, Xenial 16.04.2 LTS)
 
-- An installation of GIT, *note* that the path to executable needs to be specified in the properties for the Linux node:
+2. An installation of GIT, *note* that the path to executable needs to be specified in the properties for the Linux node:
 
 ![node_properties](https://user-images.githubusercontent.com/15145995/38550704-254e645c-3caf-11e8-8fa4-97835a88b470.PNG)
 
-- SQL Server client tools (minimum version 2016)
+3. SQL Server client tools (minimum version 2016)
   
-- Java 8 SDK   
+4. Java 8 SDK   
 
-- The Pure Storage FlashArray Docker Volume plugin should bew downloaded and installed from the Docker store:
-  https://store.docker.com/plugins/pure-docker-volume-plugin 
+5. The Pure Storage FlashArray Docker Volume plugin should bew downloaded and installed from the Docker store:
+   https://store.docker.com/plugins/pure-docker-volume-plugin 
 
 Documentation for setting up a Jenkins build node can be found by following this link:
 https://wiki.jenkins.io/display/JENKINS/Step+by+step+guide+to+set+up+master+and+slave+machines+on+Windows
 
 ## Storage
 
-At the time of writing the Linux node will require iSCSI connectivity to the FlashArray
+1. At the time of writing the Linux node will require iSCSI connectivity to the FlashArray
 
