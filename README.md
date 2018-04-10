@@ -36,10 +36,10 @@ To use this sample pipeline the following pre-requisites must be met:
 ## Linux node - build slave
 
 - A server with one of the following distributions of Linux installed:
--- CentOS Linux 7.3
--- CoreOS (Ladybug 1298.6.0 and above)
--- RedHat RHEL7
--- Ubuntu (Trusty 14.04 LTS, Xenial 16.04.2 LTS)
+ - CentOS Linux 7.3
+ - CoreOS (Ladybug 1298.6.0 and above)
+ - RedHat RHEL7
+ - Ubuntu (Trusty 14.04 LTS, Xenial 16.04.2 LTS)
 
 - An installation of GIT, *note* that the path to executable needs to be specified in the properties for the Linux node:
 
@@ -47,7 +47,7 @@ To use this sample pipeline the following pre-requisites must be met:
 
 - SQL Server client tools (minimum version 2016)
   
-- Java 8 sdk   
+- Java 8 SDK   
 
 - The Pure Storage FlashArray Docker Volume plugin should bew downloaded and installed from the Docker store:
   https://store.docker.com/plugins/pure-docker-volume-plugin 
