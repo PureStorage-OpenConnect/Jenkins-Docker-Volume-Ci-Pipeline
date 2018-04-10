@@ -57,5 +57,5 @@ https://wiki.jenkins.io/display/JENKINS/Step+by+step+guide+to+set+up+master+and+
 
 ## Storage
 
-1. At the time of writing the Linux node will require iSCSI connectivity to the FlashArray
+At the time of writing the Linux node requires iSCSI connectivity to the FlashArray
 
