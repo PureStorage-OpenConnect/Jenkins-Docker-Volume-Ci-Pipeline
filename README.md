@@ -1,6 +1,6 @@
 # Overview
 
-This repository contains a SQL Server data tools project and a Jenkinsfile written using the opinionated declarative syntax for a build pipeline that carries out the following workflow:
+This repository contains a SQL Server data tools project and a Jenkinsfile for a build pipeline that carries out the following workflow:
 
 ![workflow](https://user-images.githubusercontent.com/15145995/38548952-f5750942-3caa-11e8-8291-20f593eb1c34.PNG)
 
