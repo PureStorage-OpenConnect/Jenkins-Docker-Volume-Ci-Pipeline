@@ -35,8 +35,8 @@ pipeline {
     }
 
     parameters {
-        booleanParam(defaultValue: true           , description: '', name: 'HAPPY_PATH')
-              string(defaultValue: '10.223.112.98', description: '', name: 'CONTAINER_HOST_IP_ADDR')
+        booleanParam(defaultValue: true            , description: '', name: 'HAPPY_PATH')
+              string(defaultValue: '10.225.112.103', description: '', name: 'CONTAINER_HOST_IP_ADDR')
     }
     
     stages {
