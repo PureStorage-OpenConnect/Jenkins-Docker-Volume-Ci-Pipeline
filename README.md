@@ -1,3 +1,11 @@
+# Containers and Managing State
+
+![elephant](https://user-images.githubusercontent.com/15145995/46348469-0396eb00-c647-11e8-9102-61ae33966e5e.PNG)
+
+# The "Builder Pattern"
+
+![builder pattern](https://user-images.githubusercontent.com/15145995/46348476-0bef2600-c647-11e8-9aa8-2a1e2b1ebd8f.PNG)
+
 # Overview
 
 This repository contains a SQL Server data tools project and a Jenkinsfile for a build pipeline that carries out the following workflow:
@@ -58,4 +66,10 @@ https://wiki.jenkins.io/display/JENKINS/Step+by+step+guide+to+set+up+master+and+
 ## Storage
 
 At the time of writing the Linux node requires iSCSI connectivity to the FlashArray
+
+# Points Of Interest From This Repo
+
+
+
+
 
