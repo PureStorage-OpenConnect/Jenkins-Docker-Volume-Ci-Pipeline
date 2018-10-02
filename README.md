@@ -8,9 +8,9 @@
 
 # The Pipeline This Repo Demonstrates
 
+![docker volume workflow](https://user-images.githubusercontent.com/15145995/46348665-9afc3e00-c647-11e8-9655-3f46a785a9ee.PNG)
+
 This repository contains a SQL Server data tools project and a Jenkinsfile for a build pipeline that carries out the following workflow:
-
-
 
 1. Checks the project out from SCM
 2. Uses msbuild (with SQL Server as the target) to create a DACPAC, this is an artefact that can be deployed to a SQL Server database via the data tier application framework
