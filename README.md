@@ -1,4 +1,4 @@
-# Containers and Managing State
+# The Container "Elephant in The Room"
 
 ![elephant](https://user-images.githubusercontent.com/15145995/46348469-0396eb00-c647-11e8-9102-61ae33966e5e.PNG)
 
@@ -6,11 +6,11 @@
 
 ![builder pattern](https://user-images.githubusercontent.com/15145995/46348476-0bef2600-c647-11e8-9aa8-2a1e2b1ebd8f.PNG)
 
-# Overview
+# The Pipeline This Repo Demonstrates
 
 This repository contains a SQL Server data tools project and a Jenkinsfile for a build pipeline that carries out the following workflow:
 
-![workflow](https://user-images.githubusercontent.com/15145995/38548952-f5750942-3caa-11e8-8291-20f593eb1c34.PNG)
+
 
 1. Checks the project out from SCM
 2. Uses msbuild (with SQL Server as the target) to create a DACPAC, this is an artefact that can be deployed to a SQL Server database via the data tier application framework
@@ -68,6 +68,8 @@ https://wiki.jenkins.io/display/JENKINS/Step+by+step+guide+to+set+up+master+and+
 At the time of writing the Linux node requires iSCSI connectivity to the FlashArray
 
 # Points Of Interest From This Repo
+
+![poi](https://user-images.githubusercontent.com/15145995/46348482-10b3da00-c647-11e8-9084-66b3d8ee29e5.PNG)
 
 
 
